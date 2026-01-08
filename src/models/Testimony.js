@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const TestimonySchema = new mongoose.Schema({
     creatureId: { type: mongoose.Schema.Types.ObjectId, ref: 'Creature', required: true },
@@ -14,4 +14,4 @@ const TestimonySchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model('Testimony', TestimonySchema);
+export default mongoose.model('Testimony', TestimonySchema);

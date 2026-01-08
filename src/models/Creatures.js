@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const CreatureSchema = new mongoose.Schema({
     authorId: { type: String, required: true },
@@ -7,4 +7,5 @@ const CreatureSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model('Creature', CreatureSchema);
+// L'export par défaut est obligatoire pour ton import actuel
+export default mongoose.model('Creature', CreatureSchema);
