@@ -28,12 +28,9 @@ export const login = async (req, res) => {
 
 export const me = async (req, res) => {
   try {
-    const user = await authService.me(req.userId);
+    const user = await authService.me(req.user.id);
     res.json(user);
   } catch (err) {
-    console.error(err);
-    const status = err?.status || 500;
-    const message = err?.message || "Internal server error";
-    res.status(status).json({ error: message });
+    res.status(500).json({ error: err.message });
   }
 };
