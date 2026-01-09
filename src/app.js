@@ -1,3 +1,5 @@
+import 'dotenv/config';
+import jwt from 'jsonwebtoken';
 import express from 'express';
 import connectDB from './db.js'; // Correction ici : même dossier
 import loreRoutes from './routes/LoreRoutes.js'; // Majuscule respectée
@@ -13,6 +15,24 @@ app.use('/lore', loreRoutes);
 
 app.get("/health", (_req, res) => {
   res.json({ ok: true });
+});
+
+app.get('/get-token', (req, res) => {
+    const payload = { id: "valentin_dev", role: "admin" };
+    
+    // On utilise la clé secrète de ton fichier .env
+    const secret = process.env.JWT_SECRET || 'ma_cle_de_secours'; 
+    
+    const token = jwt.sign(payload, secret, { expiresIn: '1h' });
+    res.json({ token });
+});
+
+// 3. Tes routes normales (qui, elles, demandent un token)
+app.use('/api', loreRoutes);
+
+// Ton interface HTML (facultatif)
+app.get("/", (req, res) => {
+  res.send("<h1>Serveur opérationnel</h1>");
 });
 
 app.get('/', (req, res) => {
