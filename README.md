@@ -1,20 +1,22 @@
----
+- ***
+
 # Lore Service - Mythos Archives
 
-Ce microservice gère le bestiaire (créatures) et les témoignages de l'univers Mythos-Archives. 
+Ce microservice gère le bestiaire (créatures) et les témoignages de l'univers Mythos-Archives.
 Il est construit avec **Node.js**, **Express** et **MongoDB**.
 
-##  Installation sur Linux
-```markdown
+## Installation sur Linux
 
+````markdown
 1. **Installer les dépendances :**
    ```bash
    npm install
-
-```
+   ```
+````
 
 2. **Configurer les variables d'environnement :**
-Créez un fichier `.env` à la racine :
+   Créez un fichier `.env` à la racine :
+
 ```env
 JWT_SECRET=votre_cle_secrete
 PORT=3000
@@ -23,21 +25,19 @@ MONGODB_URI=mongodb://localhost:27017/mythos_lore
 
 ```
 
-
 3. **Lanceement de la base de données :**
+
 ```bash
 sudo systemctl start mongodb
 
 ```
 
-
 4. **Démarrage du serveur :**
+
 ```bash
 npm run dev
 
 ```
-
-
 
 ---
 
