@@ -1,6 +1,6 @@
 
 ---
-**Lore Service - Mythos Archives**
+### Lore Service - Mythos Archives
 
 Ce microservice gère le bestiaire (créatures) et les témoignages de l'univers Mythos-Archives. 
 Il est construit avec **Node.js**, **Express** et **MongoDB**.
