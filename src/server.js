@@ -1,6 +1,7 @@
-import app from "./app.js";
+import app from './app.js'; // L'extension .js est capitale ici
 
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
+
 app.listen(PORT, () => {
-  console.log(`API running on http://localhost:${PORT}`);
+  console.log(`🚀 Serveur en ligne sur http://localhost:${PORT}`);
 });
