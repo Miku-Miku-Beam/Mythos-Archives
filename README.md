@@ -1,13 +1,12 @@
 
 ---
-
-```markdown
-# Lore Service - Mythos Archives
+**Lore Service - Mythos Archives**
 
 Ce microservice gère le bestiaire (créatures) et les témoignages de l'univers Mythos-Archives. 
 Il est construit avec **Node.js**, **Express** et **MongoDB**.
 
 ##  Installation sur Linux
+```markdown
 
 1. **Installer les dépendances :**
    ```bash
@@ -43,9 +42,9 @@ npm run dev
 
 ---
 
-## Utilisation de l'API (Postman)
+## Utilisation de l'API via Postman
 
-### 1. Obtenir un badge d'accès (Token)
+### 1. Token
 
 Pour tester les routes sécurisées sans système de login complet, utilisez la route de développement :
 
@@ -96,7 +95,7 @@ Pour tester les routes sécurisées sans système de login complet, utilisez la 
 
 ---
 
-##  Dépannage (Troubleshooting)
+##  Dépannage Token
 
 ### Erreur "Invalid Token"
 
