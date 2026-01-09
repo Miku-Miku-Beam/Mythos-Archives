@@ -5,17 +5,50 @@ import Testimony from '../models/Testimony.js';
 
 const router = express.Router();
 
+// --- ROUTES GET (Lecture) ---
+
+/**
+ * GET /api/creatures
+ * Liste toutes les créatures enregistrées
+ */
+router.get('/creatures', async (req, res) => {
+    try {
+        const creatures = await Creature.find().sort({ name: 1 });
+        res.json(creatures);
+    } catch (err) {
+        res.status(500).json({ error: "Erreur lors de la récupération des créatures." });
+    }
+});
+
+/**
+ * GET /api/testimonies
+ * Liste tous les témoignages (avec possibilité de filtrer par créature via query param ?creatureId=...)
+ */
+router.get('/testimonies', async (req, res) => {
+    try {
+        const { creatureId } = req.query;
+        const filter = creatureId ? { creatureId } : {};
+        
+        // .populate permet de récupérer les infos de la créature liée si le schéma est bien configuré
+        const testimonies = await Testimony.find(filter).sort({ createdAt: -1 });
+        res.json(testimonies);
+    } catch (err) {
+        res.status(500).json({ error: "Erreur lors de la récupération des témoignages." });
+    }
+});
+
+// --- ROUTES POST (Écriture avec Auth) ---
+
 // POST /creatures
 router.post('/creatures', authenticate, async (req, res) => {
     try {
         const { name, origin } = req.body;
         
-        // On vérifie si le nom existe déjà
         const existing = await Creature.findOne({ name });
         if (existing) return res.status(400).json({ error: "Ce nom de créature existe déjà." });
 
         const creature = new Creature({
-            authorId: req.user.id, // Récupéré depuis ton JWT décodé
+            authorId: req.user.id,
             name,
             origin
         });
@@ -34,7 +67,6 @@ router.post('/testimonies', authenticate, async (req, res) => {
 
         if (!description) return res.status(400).json({ error: "Description obligatoire." });
 
-        // Règle des 5 minutes
         const fiveMinutesAgo = new Date(Date.now() - 5 * 60000);
         const alreadyPosted = await Testimony.findOne({
             authorId: req.user.id,
@@ -65,7 +97,6 @@ router.post('/testimonies/:id/validate', authenticate, async (req, res) => {
         const testimony = await Testimony.findById(req.params.id);
         if (!testimony) return res.status(404).json({ error: "Témoignage non trouvé" });
 
-        // Règle : Impossible de valider son propre témoignage
         if (testimony.authorId === req.user.id) {
             return res.status(403).json({ error: "Vous ne pouvez pas valider votre propre témoignage." });
         }
@@ -80,7 +111,5 @@ router.post('/testimonies/:id/validate', authenticate, async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
-
-// ... Ajoute ici les GET (creatures, testimonies) de la même manière
 
 export default router;
