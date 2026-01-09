@@ -94,24 +94,6 @@ Pour tester les routes sécurisées sans système de login complet, utilisez la 
 * `src/models/` : Schémas Mongoose (Creatures, Testimony).
 * `src/middlewares/auth.js` : Vérification du badge JWT.
 
-```bash
-Mythos-Archives/
-├── node_modules/       # Dépendances installées (npm install)
-├── src/                # Code source de l'application
-│   ├── middlewares/    # Fonctions de sécurité (ex: auth.js)
-│   │   └── auth.js
-│   ├── models/         # Schémas de la base de données (Mongoose)
-│   │   ├── Creatures.js
-│   │   └── Testimony.js
-│   ├── routes/         # Définition des points d'entrée (Endpoints)
-│   │   └── LoreRoutes.js
-│   ├── app.js          # Configuration d'Express et des routes
-│   └── server.js       # Lancement du serveur et connexion DB
-├── .env                # Variables secrètes (PORT, JWT_SECRET, etc.)
-├── .gitignore          # Fichiers à ne pas envoyer sur GitHub (ex: .env)
-├── package.json        # Liste des dépendances et scripts
-└── README.md           # Documentation du projet
-```
 ---
 
 ##  Dépannage (Troubleshooting)
