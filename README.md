@@ -112,27 +112,3 @@ sudo rm /tmp/mongodb-27017.sock  # Nettoyage si crash précédent
 sudo systemctl restart mongodb
 
 ```
-
-### Visualiser les données
-
-Installez **MongoDB Compass** pour voir vos données graphiquement :
-
-```bash
-yay -S mongodb-compass
-
-```
-
-Connectez-vous à `mongodb://localhost:27017`.
-
-```
-
----
-
-### Une astuce pour ton fichier `.env` :
-Pour que l'erreur `Invalid token` disparaisse, assure-toi que ton fichier `.env` ne contient **pas d'espaces** autour du signe `=`.
-* `JWT_SECRET=moncode123`
-* `JWT_SECRET = moncode123`
-
-**Est-ce que tu veux que je t'aide à vérifier une dernière chose sur tes modèles Mongoose pour être sûr que les ID fonctionnent bien entre Créatures et Témoignages ?**
-
-```
