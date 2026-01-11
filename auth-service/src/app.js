@@ -1,6 +1,7 @@
 import express from "express";
 import authRoutes from "./routes/authRoute.js";
 import adminRoutes from "./routes/adminRoute.js";
+import internalRoutes from "./routes/reputationRoute.js";
 // Pour le token JWT
 import dotenv from "dotenv";
 dotenv.config();
@@ -10,5 +11,6 @@ app.use(express.json());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/reputation", internalRoutes);
 
 export default app;
