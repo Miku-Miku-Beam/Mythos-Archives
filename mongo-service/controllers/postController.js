@@ -61,6 +61,18 @@ export const createTestimony = async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
+
+    const testimony = new Testimony({
+      creatureId,
+      authorId: req.user.id,
+      description,
+    });
+
+    await testimony.save();
+    res.status(201).json(testimony);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
 export const validateTestimony = async (req, res) => {
@@ -83,7 +95,13 @@ export const validateTestimony = async (req, res) => {
         testimony.validatedBy = req.user.id;
         testimony.validatedAt = new Date();
         await testimony.save();
+        
+      
+        await updateReputation(testimony.authorId, 3, req.user.token);
 
+        if (validator.role === "EXPERT") {
+        await updateReputation(req.user.id, 1, req.user.token);
+        }
         // 2. RECALCUL DU LEGEND SCORE
         // Compter tous les témoignages validés pour cette créature précise
         const count = await Testimony.countDocuments({ 
@@ -109,4 +127,32 @@ export const validateTestimony = async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
+
+    res.json(testimony);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const rejectTestimony = async (req, res) => {
+  try {
+    const testimony = await Testimony.findById(req.params.id);
+    if (!testimony)
+      return res.status(404).json({ error: "Témoignage non trouvé" });
+
+    if (testimony.authorId === req.user.id) {
+      return res.status(403).json({ error: "Action interdite." });
+    }
+
+    testimony.status = "VALIDATED";
+    testimony.validatedBy = req.user.id;
+    testimony.validatedAt = new Date();
+
+    await testimony.save();
+
+    await updateReputation(testimony.authorId, -1, req.user.token);
+    res.json(testimony);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
