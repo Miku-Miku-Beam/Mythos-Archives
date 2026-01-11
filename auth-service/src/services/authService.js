@@ -14,7 +14,6 @@ export const register = async ({ email, username, password, role }) => {
 };
 
 export const login = async (data) => {
-  // Protection si req.body est vide
   const { email, password } = data || {};
   if (!email || !password) {
     throw { status: 400, message: "Email and password are required" };
@@ -26,13 +25,18 @@ export const login = async (data) => {
   const ok = await bcrypt.compare(password, user.password);
   if (!ok) throw { status: 401, message: "Invalid credentials" };
 
+  // Le payload du JWT contient l'ID qui sera utilisé par le mongo-service
   const token = jwt.sign(
     { id: user.id, role: user.role },
     process.env.JWT_SECRET,
     { expiresIn: "1h" }
   );
 
-  return { token };
+  // RENVEYER LE TOKEN ET L'USER pour éviter l'erreur "undefined reading id"
+  return { 
+    token, 
+    user: { id: user.id, email: user.email, username: user.username, role: user.role } 
+  };
 };
 
 export const me = async (id) => {
