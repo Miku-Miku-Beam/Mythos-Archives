@@ -24,7 +24,7 @@ Ce projet implémente une architecture microservices pour la gestion d'un bestia
 * À partir de **10 points**, il passe automatiquement au rang **EXPERT**.
 
 
-5. **Legend Score** : Les créatures voient leur score évoluer selon la formule : .
+5. **Legend Score** : Les créatures voient leur score évoluer selon la formule : Score = 1 + (Nombre_Témoignages_Validés / 5).
 
 ---
 
