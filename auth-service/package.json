@@ -1,0 +1,36 @@
+{
+  "name": "mythosarchives",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "engineType": "binary",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "prisma": "prisma"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Miku-Miku-Beam/Mythos-Archives.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Miku-Miku-Beam/Mythos-Archives/issues"
+  },
+  "homepage": "https://github.com/Miku-Miku-Beam/Mythos-Archives#readme",
+  "description": "",
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "express-jwt": "^8.5.1",
+    "jsonwebtoken": "^9.0.3",
+    "prisma": "^5.22.0",
+    "swagger-ui-express": "^5.0.1",
+    "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  }
+}
