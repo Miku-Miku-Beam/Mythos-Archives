@@ -25,8 +25,8 @@ MONGODB_URI=mongodb://localhost:27017/mythos_lore
 
 ```
 
-3. **Lanceement de la base de données :**
 
+3. **Lancement de la base de données :**
 ```bash
 sudo systemctl start mongodb
 

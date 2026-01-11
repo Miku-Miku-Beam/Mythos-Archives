@@ -30,11 +30,6 @@ app.get('/get-token', (req, res) => {
 // 3. Tes routes normales (qui, elles, demandent un token)
 app.use('/api', loreRoutes);
 
-// Ton interface HTML (facultatif)
-app.get("/", (req, res) => {
-  res.send("<h1>Serveur opérationnel</h1>");
-});
-
 app.get('/', (req, res) => {
     res.send(`
         <html>
