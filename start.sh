@@ -11,4 +11,4 @@ echo "Setup Mongo-Service..."
 cd mongo-service && npm install
 gnome-terminal --title="MONGO-SERVICE" -- bash -c "npm run dev; exec bash" &
 
-echo "✅ Système prêt !"
+echo "Microservices lancés !"

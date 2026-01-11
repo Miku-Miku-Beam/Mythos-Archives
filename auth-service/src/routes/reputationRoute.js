@@ -1,5 +1,5 @@
 import { Router } from "express";
-import * as controller from "../controllers/internalController.js";
+import * as controller from "../controllers/reputationController.js";
 import { reputationAuth } from "../middlewares/reputationMiddleware.js";
 
 const router = Router();

@@ -1,91 +1,96 @@
-# Mythos API - Projet Microservices (L3 Informatique)
+# Mythos API - Projet Microservices
 
-Ce projet implémente un système de gestion de bestiaire légendaire basé sur une architecture microservices. L'objectif est de séparer la logique d'authentification (relationnelle) de la gestion du contenu (NoSQL).
+Ce projet implémente une architecture microservices pour la gestion d'un bestiaire légendaire. Le système sépare l'identité et la réputation (SQL) du contenu métier (NoSQL).
 
 ## Architecture du projet
 
-* **Auth-Service (Port 3001)** : Gestion des utilisateurs (Inscription/Connexion).
+* **Auth-Service (Port 3001)** : Gestion des utilisateurs et de leur réputation.
 * *Stack* : Node.js, SQLite, Prisma.
+* *Structure* : Architecture par couches (Routes -> Controllers -> Services) dans le dossier `src/`.
 
 
-* **Mongo-Service (Port 3000)** : Gestion du Lore (Créatures/Témoignages).
+* **Mongo-Service (Port 3000)** : Gestion du Lore (Créatures et Témoignages).
 * *Stack* : Node.js, MongoDB, Mongoose.
 
 
 
 ## Workflow technique
 
-1. **Identity Provider** : Authentification sur le port 3001. Un **JWT** (JSON Web Token) est généré, contenant l'ID et le rôle de l'utilisateur.
-2. **Stateless Auth inter-services** : Le `mongo-service` valide le token de manière autonome grâce au **Secret Partagé** (`JWT_SECRET`). Cela évite des appels réseau inutiles vers le service d'authentification.
-3. **Système de Legend Score** : Algorithme de gamification mis à jour lors de la validation d'un témoignage par un tiers.
-* **Formule** : 
+1. **Identity Provider** : Authentification sur le port 3001 pour obtenir un **JWT** signé.
+2. **Stateless Auth** : Le `mongo-service` valide l'identité via son middleware `auth.js` grâce au secret partagé (`JWT_SECRET`).
+3. **Internal API (Réputation)** : Le `auth-service` expose une route sécurisée par une clé d'API interne (`x-internal-key`) permettant au `mongo-service` de mettre à jour la réputation d'un utilisateur.
+4. **Logic de Promotion** :
+* Un utilisateur gagne de la réputation via ses actions.
+* À partir de **10 points**, il passe automatiquement au rang **EXPERT**.
 
 
+5. **Legend Score** : Les créatures voient leur score évoluer selon la formule : .
 
 ---
 
 ## Démarrage Rapide
 
-Le script `start.sh` automatise le nettoyage des ports, l'installation des dépendances et le lancement des deux microservices dans des terminaux séparés.
+Le script `start.sh` automatise le nettoyage des ports et le lancement des services dans des terminaux séparés.
 
 ### Utilisation :
 
-1. **Permissions** :
-```bash
-chmod +x start.sh
-
-```
-
-
-2. **Exécution** :
-```bash
-./start.sh
-
-```
-
-
+1. **Permissions** : `chmod +x start.sh`
+2. **Exécution** : `./start.sh`
 
 ---
 
 ## Configuration (.env)
 
-Les fichiers `.env` doivent être présents à la racine de chaque service et partager le même secret de signature.
-
-**Auth-Service :**
+**Auth-Service (`auth-service/.env`) :**
 
 ```env
 PORT=3001
 DATABASE_URL="file:./prisma/dev.db"
-JWT_SECRET=MaCle123
+JWT_SECRET=MaCleSecrete123
+INTERNAL_KEY=CleInternePourLeServiceMongo
 
 ```
 
-**Mongo-Service :**
+**Mongo-Service (`mongo-service/.env`) :**
 
 ```env
 PORT=3000
 MONGO_URI=mongodb://localhost:27017/mythos
-JWT_SECRET=MaCle123
+JWT_SECRET=MaCleSecrete123
+INTERNAL_KEY=CleInternePourLeServiceMongo
 
 ```
 
 ---
 
-## Test avec Postman (Step-by-Step)
+## Guide de Test Postman
 
-1. **Auth** : `POST http://localhost:3001/api/auth/login` -> Copier le `token`.
-2. **Setup Postman** : Dans les requêtes suivantes, utiliser l'onglet **Auth** -> **Bearer Token**.
-3. **Création** : `POST http://localhost:3000/api/creatures` -> Récupérer l'ID de la créature.
-4. **Témoignage** : `POST http://localhost:3000/api/testimonies` -> Récupérer l'ID du témoignage.
-5. **Validation** : `PUT http://localhost:3000/api/validate/<ID_TESTIMONY>` (utiliser le token d'un **autre** compte utilisateur).
-6. **Vérification** : `GET http://localhost:3000/api/creatures`. Le champ `legendScore` doit être passé à **1.2**.
+### 1. Authentification
+
+* `POST http://localhost:3001/api/auth/login`
+* Récupérer le `token` et l'utiliser dans l'onglet **Auth > Bearer Token** pour les services Mongo.
+
+### 2. Gestion de la Réputation (Inter-services)
+
+* **Méthode** : `PATCH`
+* **URL** : `http://localhost:3001/api/reputation/users/:id/reputation`
+* **Header requis** : `x-internal-key` : *Votre_Cle_Interne*
+* **Body** : `{"delta": 5}` (Incrémente la réputation de 5).
+
+### 3. Cycle de vie des Créatures
+
+* `POST :3000/api/creatures` (Création).
+* `POST :3000/api/testimonies` (Ajout d'un témoignage).
+* `PUT :3000/api/validate/<ID>` (Validation par un expert/admin).
+* `GET :3000/api/creatures` (Vérification du Legend Score).
 
 ---
 
 ## Dépannage
 
-* **Invalid signature** : Le `JWT_SECRET` diffère entre les deux services ou les serveurs n'ont pas été redémarrés.
-* **Prisma error** : Vérifier que `DATABASE_URL` utilise le préfixe `file:`.
-* **Port déjà utilisé** : Si un port reste bloqué, utiliser la commande `fuser -k 3000/tcp`.
+* **Forbidden (403)** : La clé `x-internal-key` dans Postman ne correspond pas au `.env` du `auth-service`.
+* **ERR_MODULE_NOT_FOUND** : Vérifier que les imports dans `src/` incluent bien l'extension `.js`.
+* **Prisma Studio** : Utiliser `npx prisma studio` dans `auth-service` pour visualiser la base SQLite.
 
 ---
+
